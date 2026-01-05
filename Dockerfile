@@ -11,6 +11,10 @@ ENV JAVA_HOME=/usr/lib/jvm/default-jvm
 ENV WORKDIR=${CATALINA_BASE}
 ENV TOMCAT_NATIVE_LIBDIR=$CATALINA_HOME/native-jni-lib
 ENV LD_LIBRARY_PATH=/usr/lib:/usr/local/lib:${TOMCAT_NATIVE_LIBDIR}
+ENV MGR_PASS_FILE=''
+ENV RPAUSER_PASS_FILE=''
+ENV JMXUSER_PASS_FILE=''
+
 
 RUN mkdir -p "${CATALINA_HOME}"
 
@@ -132,10 +136,10 @@ RUN set -xe \
 COPY tomcat.config "$SECRETS_HOME/"
 RUN chown tomcat:tomcat "$SECRETS_HOME/tomcat.config"
 
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+COPY entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-ENTRYPOINT [ "docker-entrypoint.sh" ]
+ENTRYPOINT [ "entrypoint.sh" ]
 
 USER tomcat
 
