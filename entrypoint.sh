@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 #===============================================================================
 #
-#          FILE: docker-entrypoint.sh
+#          FILE: entrypoint.sh
 # 
-#         USAGE: ./docker-entrypoint.sh 
+#         USAGE: ./entrypoint.sh 
 # 
 #   DESCRIPTION: Configures and starts Apache Tomcat server
 # 
@@ -294,21 +294,34 @@ def configure_tomcat_manager(org: str, runtime_env: str, server_name: str):
 
 def configure_tomcat_manager_users(tomcat_config: dict):
     tomcat_users_xml_path = os.environ['CATALINA_BASE'] + r'/conf/tomcat-users.xml'
-    manager_pass_path = os.environ['SECRETS_HOME'] + r'/'+ tomcat_config['managerpass']
+    mgr_pass_path = os.environ['SECRETS_HOME'] + r'/'+ tomcat_config['managerpass']
     rpa_pass_path = os.environ['SECRETS_HOME'] + r'/'+ tomcat_config['rpapass']
     jmx_pass_path = os.environ['SECRETS_HOME'] + r'/'+ tomcat_config['jmxpass']
+
+    mgr_pass_file = os.environ['MGR_PASS_FILE']
+    rpauser_pass_file = os.environ['RPAUSER_PASS_FILE']
+    jmxuser_pass_file = os.environ['JMXUSER_PASS_FILE']
+
+    if mgr_pass_file:
+        mgr_pass_path = mgr_pass_file
+
+    if rpauser_pass_file:
+        rpa_pass_path = rpauser_pass_file
+
+    if jmxuser_pass_file:
+        jmx_pass_path = jmxuser_pass_file
 
     # Set default passwords
     manager = tomcat_config['manager']
     rpauser = tomcat_config['rpauser']
     jmxuser = tomcat_config['jmxuser']
 
-    if os.path.isfile(manager_pass_path):
-        with open(manager_pass_path, 'r') as f:
+    if os.path.isfile(mgr_pass_path):
+        with open(mgr_pass_path, 'r') as f:
             managerpass = f.read().strip()
     else:
         managerpass = gen_random_password()
-        with open(manager_pass_path, 'w') as f:
+        with open(mgr_pass_path, 'w') as f:
             f.write(managerpass)
 
     if os.path.isfile(rpa_pass_path):
@@ -350,15 +363,6 @@ def configure_tomcat_manager_users(tomcat_config: dict):
 
     # Apply the change
     tomcat_users_xml = re.sub(match_robot, replace_robot + append_jmx, tomcat_users_xml)
-
-    # Add RPA user
-    #replace_robot = f'\\1{rpauser}\\2{rpapass}\\3'
-
-    # Preview the match
-    #match = re.search(match_robot, tomcat_users_xml)
-
-    # Apply the change
-    #tomcat_users_xml = re.sub(match_robot, replace_robot, tomcat_users_xml)
 
     # Uncomment users
     match_term = r'(<!--?[\s]*<user username="manager".*?roles="manager-jmx"/>.*?-->)'
