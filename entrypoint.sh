@@ -83,7 +83,12 @@ def configure_tomcat(tomcat_config: dict, keystore_config: dict):
 
         stdout, stderr = ks_out.communicate()
 
-        print("Java Keystore created.")
+        if stderr:
+            print("Error creating Java Keystore...")
+            print(stderr.decode())
+            sys.exit(1)
+        else:
+            print("Java Keystore created.")
 
     else:
         print("Keystore already exists, skipping creation.")
@@ -109,8 +114,9 @@ def configure_server_xml(keystore_path: str, keystore_pass: str, server_name: st
 
     # Modify the server.xml content based on the configuration
     # Add SSL Connector
+    tls_port = os.environ['TC_SECURE_PORT']
     match_line = r'<Service name="Catalina">'
-    connector = f"\n\n    <Connector port=\"8443\" maxThreads=\"200\" scheme=\"https\" \
+    connector = f"\n\n    <Connector port=\"{tls_port}\" maxThreads=\"200\" scheme=\"https\" \
     \n\t       secure=\"true\" SSLEnabled=\"true\" \
     \n\t       keystoreFile=\"{keystore_path}\" \
     \n\t       keystorePass=\"{keystore_pass}\" \
@@ -293,10 +299,10 @@ def configure_tomcat_manager(org: str, runtime_env: str, server_name: str):
 
 
 def configure_tomcat_manager_users(tomcat_config: dict):
-    tomcat_users_xml_path = os.environ['CATALINA_BASE'] + r'/conf/tomcat-users.xml'
-    mgr_pass_path = os.environ['SECRETS_HOME'] + r'/'+ tomcat_config['managerpass']
-    rpa_pass_path = os.environ['SECRETS_HOME'] + r'/'+ tomcat_config['rpapass']
-    jmx_pass_path = os.environ['SECRETS_HOME'] + r'/'+ tomcat_config['jmxpass']
+    tomcat_users_xml_path = os.path.join(os.environ['CATALINA_BASE'], 'conf', 'tomcat-users.xml')
+    mgr_pass_path = os.path.join(os.environ['SECRETS_HOME'], tomcat_config['managerpass'])
+    rpa_pass_path = os.path.join(os.environ['SECRETS_HOME'], tomcat_config['rpapass'])
+    jmx_pass_path = os.path.join(os.environ['SECRETS_HOME'], tomcat_config['jmxpass'])
 
     mgr_pass_file = os.environ['MGR_PASS_FILE']
     rpauser_pass_file = os.environ['RPAUSER_PASS_FILE']
