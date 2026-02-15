@@ -32,14 +32,14 @@ RUN apk add --no-cache \
    jsvc  
 
 ENV TOMCAT_VERSION="9.0.113" \
-    TOMCAT_NATIVE_VERSION="2.0.12" 
+    TOMCAT_NATIVE_VERSION="2.0.13" 
 	#COMMONS_DAEMON_VERSION="1.5.1"
 
 RUN set -xe \
-	&& TOMCAT_DOWNLOAD_URL="https://dlcdn.apache.org/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
+	&& TOMCAT_DOWNLOAD_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
 	&& TOMCAT_DOWNLOAD_SHA512="1b8d9ba5c5e2ed2b4134a3fe6f206b3bb1184391e5c112ca7ea6a49ecadca63a7fc565c83caa610f0a8341988777870302a8162a84f0880af751531cdd4a2ee5" \
-    && TOMCAT_NATIVE_DOWNLOAD_URL="https://dlcdn.apache.org/tomcat/tomcat-connectors/native/${TOMCAT_NATIVE_VERSION}/source/tomcat-native-${TOMCAT_NATIVE_VERSION}-src.tar.gz" \
-	&& TOMCAT_NATIVE_DOWNLOAD_SHA512="d937e04f7c9f0fa6ef82b32928fa2d59dbdac45cb58c7ba8eff4338fbd942297b1c9512a0a8ff80cf758d9b6ca5cc5cba8cefdc91507318b72afc56888aa1f3c" \
+	&& TOMCAT_NATIVE_DOWNLOAD_URL="https://archive.apache.org/dist/tomcat/tomcat-connectors/native/${TOMCAT_NATIVE_VERSION}/source/tomcat-native-${TOMCAT_NATIVE_VERSION}-src.tar.gz" \
+	&& TOMCAT_NATIVE_DOWNLOAD_SHA512="7bdcf6fab95b7a349ea2cc9f428cff165439191aa69928b6feb9c49d72b5b28fbb411a7ca94042320f8b1a571b29e8a74889d57a9e9cf4cf6e4ff3a0a158d342" \
 	&& COMMONS_DAEMON_DOWNLOAD_URL="https://github.com/apache/commons-daemon/archive/refs/tags/commons-daemon-${COMMONS_DAEMON_VERSION}.tar.gz" \
 	&& apk add --no-cache --virtual .fetch-deps \
 		curl \

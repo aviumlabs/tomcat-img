@@ -25,8 +25,6 @@ The manager webapp is activated and the default passwords are located in the
 /opt/secrets volume.
 
 
-
-
 ## Build an Image
 
 ### Build Default
