@@ -31,7 +31,7 @@ The manager webapp is activated and the default passwords are located in the
 
 **Regular build**
 ```shell
-export TC_VERSION=9.0.116
+export TC_VERSION=9.0.117
 ```
 
 ```shell

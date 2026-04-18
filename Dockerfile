@@ -31,13 +31,13 @@ RUN apk add --no-cache \
    pwgen \
    jsvc  
 
-ENV TOMCAT_VERSION="9.0.116" \
+ENV TOMCAT_VERSION="9.0.117" \
     TOMCAT_NATIVE_VERSION="2.0.14" 
 	#COMMONS_DAEMON_VERSION="1.5.1"
 
 RUN set -xe \
 	&& TOMCAT_DOWNLOAD_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
-	&& TOMCAT_DOWNLOAD_SHA512="a0992861f7615f0a79d372e84969a1bb48f603ef1687380d9a3579164dae7a1dea6b440e1bad27447f91a676528b2951634a0707616707f1df73cd27534ea5f9" \
+	&& TOMCAT_DOWNLOAD_SHA512="82b15278a7bfa2685c80e07963c43246df4fd742d574b608a68f5ce67c6ffde0eff3e224cc9809925cc6bf7002a190c3bf420f50c0e4052467d3e665efc84a54" \
 	&& TOMCAT_NATIVE_DOWNLOAD_URL="https://archive.apache.org/dist/tomcat/tomcat-connectors/native/${TOMCAT_NATIVE_VERSION}/source/tomcat-native-${TOMCAT_NATIVE_VERSION}-src.tar.gz" \
 	&& TOMCAT_NATIVE_DOWNLOAD_SHA512="33d626fab35cbfa7398ca90cabd99950c6362ab4e19637012850fd84ecc78184e4c6c975ece92dc8d6461b6a8c2f83221cbc7374ff154422e7722606a4a144c7" \
 	&& COMMONS_DAEMON_DOWNLOAD_URL="https://github.com/apache/commons-daemon/archive/refs/tags/commons-daemon-${COMMONS_DAEMON_VERSION}.tar.gz" \
