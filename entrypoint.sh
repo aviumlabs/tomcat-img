@@ -248,7 +248,7 @@ def configure_tomcat_manager(org: str, runtime_env: str, server_name: str):
     if not os.path.isdir(mgr_xml_dir):
         os.makedirs(mgr_xml_dir)
 
-    with open(mgr_xml_path, 'x') as f:
+    with open(mgr_xml_path, 'w') as f:
         f.write(mgr_xml_content)
 
     # Brand Tomcat Manager 
