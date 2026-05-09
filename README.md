@@ -53,6 +53,13 @@ docker push aviumlabs/tomcat:$TC_VERSION-alpine
 ```
 
 
+## Runtime
+
+```shell
+docker exec -it ap1 /bin/ash
+```
+
+
 ## Issues
 
 ### commons-daemon compile
