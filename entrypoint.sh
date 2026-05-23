@@ -344,7 +344,7 @@ def configure_tomcat_manager_users(tomcat_config: dict):
     with open(tomcat_users_xml_path, 'r') as f:
         tomcat_users_xml = f.read()
 
-    match_admin = r'(<user username=")admin(" password=").*?(".*?/>)'
+    match_admin = r'(<user username=\")admin(\" password=\").*?(\".*?/>)'
     replace_admin = f'\\1{manager}\\2{managerpass}\\3'
 
     # Preview the match
