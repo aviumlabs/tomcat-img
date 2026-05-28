@@ -344,7 +344,7 @@ def configure_tomcat_manager_users(tomcat_config: dict):
     with open(tomcat_users_xml_path, 'r') as f:
         tomcat_users_xml = f.read()
 
-    match_admin = r'(<user username=\")admin(\" password=\").*?(\".*?/>)'
+    match_admin = r'(<user username=")admin(" password=").*?(\" roles="manager-gui"/>)'
     replace_admin = f'\\1{manager}\\2{managerpass}\\3'
 
     # Preview the match
@@ -354,7 +354,7 @@ def configure_tomcat_manager_users(tomcat_config: dict):
     tomcat_users_xml = re.sub(match_admin, replace_admin, tomcat_users_xml)
 
     # Add JMX user
-    match_robot = r'(<user username=")robot(" password=").*?(".*?/>)'
+    match_robot = r'(<user username=")robot(" password=").*?(\" roles="manager-script"/>)'
     replace_robot = f'\\1{rpauser}\\2{rpapass}\\3'
     append_jmx = f'\n  <user username="{jmxuser}" password="{jmxpass}" roles="manager-jmx"/>'
 
