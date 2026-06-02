@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM alpine:3.23
 
-ENV INSTANCE_NAME="bin-a"
+ENV INSTANCE_NAME="tc1"
 ENV BACKUP_HOME=/opt/backup
 ENV SECRETS_HOME=/opt/secrets
 ENV CATALINA_BASE="/opt/tomcat/instances/${INSTANCE_NAME}"

@@ -44,7 +44,11 @@ docker build --pull --no-cache -t aviumlabs/tomcat:$TC_VERSION-alpine --provenan
 ```
 
 ```shell
-docker run -h ap1 --name ap1 -p 8080:8080 -p 8443:8443 -v ap1_tc_backup:/opt/backup -v ap1_tc_inst_logs:/opt/tomcat/instances/bin-a/logs -v ap1_tc_inst_conf:/opt/tomcat/instances/bin-a/conf -v ap1_tc_secrets:/opt/secrets -v ap1_tc_inst_webapps:/opt/tomcat/instances/bin-a/webapps -it --rm aviumlabs/tomcat:$TC_VERSION-alpine
+export INST_NAME=tc1
+```
+
+```shell
+docker run -h ap1 --name ap1 -p 8080:8080 -p 8443:8443 -v ap1_tc_backup:/opt/backup -v ap1_tc_inst_logs:/opt/tomcat/instances/$INST_NAME/logs -v ap1_tc_inst_conf:/opt/tomcat/instances/$INST_NAME/conf -v ap1_tc_secrets:/opt/secrets -v ap1_tc_inst_webapps:/opt/tomcat/instances/$INST_NAME/webapps -it --rm aviumlabs/tomcat:$TC_VERSION-alpine
 ```
 
 Push to docker hub:
