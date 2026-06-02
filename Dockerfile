@@ -31,6 +31,9 @@ RUN apk add --no-cache \
    pwgen \
    jsvc  
 
+RUN pip install --upgrade pip && \
+	pip install --no-cache-dir rich
+
 ENV TOMCAT_VERSION="9.0.118" \
     TOMCAT_NATIVE_VERSION="2.0.14" 
 	#COMMONS_DAEMON_VERSION="1.5.1"
