@@ -25,6 +25,12 @@ The manager webapp is activated and the default passwords are located in the
 /opt/secrets volume.
 
 
+### TLS Certificate
+A TLS certificiate is generated at build time. The certificate information is 
+generated based on the values defined in the tomcat.config file's `keystore` 
+section.
+
+
 ## Build an Image
 
 ### Build Default
@@ -48,7 +54,7 @@ export INST_NAME=tc1
 ```
 
 ```shell
-docker run -h ap1 --name ap1 -p 8080:8080 -p 8443:8443 -v ap1_tc_backup:/opt/backup -v ap1_tc_inst_logs:/opt/tomcat/instances/$INST_NAME/logs -v ap1_tc_inst_conf:/opt/tomcat/instances/$INST_NAME/conf -v ap1_tc_secrets:/opt/secrets -v ap1_tc_inst_webapps:/opt/tomcat/instances/$INST_NAME/webapps -it --rm aviumlabs/tomcat:$TC_VERSION-alpine
+docker run -h ap1.aviumlabs.test --name ap1 -p 8080:8080 -p 8443:8443 -v ap1_tc_backup:/opt/backup -v ap1_tc_inst_logs:/opt/tomcat/instances/$INST_NAME/logs -v ap1_tc_inst_conf:/opt/tomcat/instances/$INST_NAME/conf -v ap1_tc_secrets:/opt/secrets -v ap1_tc_inst_webapps:/opt/tomcat/instances/$INST_NAME/webapps -it --rm aviumlabs/tomcat:$TC_VERSION-alpine
 ```
 
 Push to docker hub:

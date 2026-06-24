@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM alpine:3.23
+FROM alpine:3.24
 
 ENV INSTANCE_NAME="tc1"
 ENV BACKUP_HOME=/opt/backup
@@ -28,11 +28,10 @@ RUN apk add --no-cache \
    openjdk21-jdk \
    openssl \
    python3 \
+   py3-rich \
+   py3-requests \
    pwgen \
    jsvc  
-
-RUN pip install --upgrade pip && \
-	pip install --no-cache-dir rich
 
 ENV TOMCAT_VERSION="9.0.118" \
     TOMCAT_NATIVE_VERSION="2.0.14" 

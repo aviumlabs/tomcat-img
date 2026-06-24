@@ -1,5 +1,8 @@
 # CHANGELOG
 
+**2026-06-24**
+Update base image to Alpine Linux 3.24
+
 **2026-05-23**
 Add branch for Apache Tomcat v9.0.118
 

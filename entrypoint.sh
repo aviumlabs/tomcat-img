@@ -18,6 +18,7 @@ import os
 import random
 import re
 import string
+import socket
 import subprocess
 import sys
 
@@ -60,7 +61,8 @@ def configure_tomcat(tomcat_config: dict, keystore_config: dict):
     locality = keystore_config['locality']
     country = keystore_config['country']
     validity = keystore_config['validity']
-    server_name = os.environ['HOSTNAME'] + tomcat_config['dns_domain']
+    server_name = os.environ['HOSTNAME']
+    alias = socket.getfqdn()
     d_name = f"CN={server_name},L={locality},O={org},C={country}"
     keystore_path = os.environ['CATALINA_BASE'] + r'/conf/' + keystore_config['keystore']
     if not os.path.isfile(keystore_path):
@@ -68,7 +70,7 @@ def configure_tomcat(tomcat_config: dict, keystore_config: dict):
                                    "-genkeypair",
                                    "-keyalg", "EC",
                                    "-groupname", "secp384r1",
-                                   "-alias", server_name,
+                                   "-alias", alias,
                                    "-dname", d_name,
                                    "-validity", validity,
                                    "-keystore", keystore_path,
