@@ -8,7 +8,7 @@ ENV CATALINA_BASE="/opt/tomcat/instances/${INSTANCE_NAME}"
 ENV CATALINA_HOME=/usr/local/tomcat
 ENV PATH=$CATALINA_HOME/bin:$PATH
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm
-ENV WORKDIR=${CATALINA_BASE}
+ENV WORKDIR=/opt/tomcat
 ENV TOMCAT_NATIVE_LIBDIR=$CATALINA_HOME/native-jni-lib
 ENV LD_LIBRARY_PATH=/usr/lib:/usr/local/lib:${TOMCAT_NATIVE_LIBDIR}
 ENV MGR_PASS_FILE=
@@ -31,7 +31,8 @@ RUN apk add --no-cache \
    py3-rich \
    py3-requests \
    pwgen \
-   jsvc  
+   jsvc \
+   curl
 
 ENV TOMCAT_VERSION="9.0.119" \
     TOMCAT_NATIVE_VERSION="2.0.15" 

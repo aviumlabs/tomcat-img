@@ -34,7 +34,7 @@ def main():
         tomcat_config['configured'] = 'true'
         save_config(tomcat_config, keystore_config)
 
-    cat_path = os.environ['CATALINA_HOME'] + r'/bin/catalina.sh'
+    cat_path = os.path.join(os.environ['CATALINA_HOME'], 'bin', 'catalina.sh')
 
     try:
         subprocess.run([cat_path, 'run'])
@@ -46,7 +46,7 @@ def main():
 
 def configure_tomcat(tomcat_config: dict, keystore_config: dict):
     # Generate a random password for the keystore
-    keystore_pass_path = os.environ['SECRETS_HOME'] + r'/' + keystore_config['keystore_pass']
+    keystore_pass_path = os.path.join(os.environ['SECRETS_HOME'], keystore_config['keystore_pass'])
     if not os.path.isfile(keystore_pass_path):
         keystore_pass = gen_random_password()
         with open(keystore_pass_path, 'w') as f:
@@ -62,15 +62,15 @@ def configure_tomcat(tomcat_config: dict, keystore_config: dict):
     country = keystore_config['country']
     validity = keystore_config['validity']
     server_name = os.environ['HOSTNAME']
-    alias = socket.getfqdn()
-    d_name = f"CN={server_name},L={locality},O={org},C={country}"
-    keystore_path = os.environ['CATALINA_BASE'] + r'/conf/' + keystore_config['keystore']
+    fqdn = socket.getfqdn()
+    d_name = f"CN={fqdn},L={locality},O={org},C={country}"
+    keystore_path = os.path.join(os.environ['CATALINA_BASE'], 'conf', keystore_config['keystore'])
     if not os.path.isfile(keystore_path):
         ks_out = subprocess.Popen(["/usr/bin/keytool",
                                    "-genkeypair",
                                    "-keyalg", "EC",
                                    "-groupname", "secp384r1",
-                                   "-alias", alias,
+                                   "-alias", fqdn,
                                    "-dname", d_name,
                                    "-validity", validity,
                                    "-keystore", keystore_path,
@@ -91,20 +91,20 @@ def configure_tomcat(tomcat_config: dict, keystore_config: dict):
         print("Keystore already exists, skipping creation.")
 
     # Configure server.xml for SSL and UTF-8 encoding
-    configure_server_xml(keystore_path, keystore_pass, server_name)
+    configure_server_xml(keystore_path, keystore_pass, fqdn)
 
     # Configure logging.properties
-    configure_logging_properties(server_name)
+    configure_logging_properties()
 
     # Configure Tomcat Manager
-    configure_tomcat_manager(org, tomcat_config['runtime_env'], server_name)
+    configure_tomcat_manager(org, tomcat_config['runtime_env'], fqdn)
 
     # Configure Tomcat users
     configure_tomcat_manager_users(tomcat_config)
 
 
-def configure_server_xml(keystore_path: str, keystore_pass: str, server_name: str):
-    server_xml_path = os.environ['CATALINA_BASE'] + r'/conf/server.xml'
+def configure_server_xml(keystore_path: str, keystore_pass: str, fqdn: str):
+    server_xml_path = os.path.join(os.environ['CATALINA_BASE'], 'conf', 'server.xml')
 
     with open(server_xml_path, 'r') as f:
         server_xml = f.read()
@@ -117,7 +117,7 @@ def configure_server_xml(keystore_path: str, keystore_pass: str, server_name: st
     \n\t       secure=\"true\" SSLEnabled=\"true\" \
     \n\t       keystoreFile=\"{keystore_path}\" \
     \n\t       keystorePass=\"{keystore_pass}\" \
-    \n\t       keyAlias=\"{server_name}\" \
+    \n\t       keyAlias=\"{fqdn}\" \
     \n\t       sslEnabledProtocols=\"TLSv1.3\" \
     \n\t       clientAuth=\"false\" sslProtocol=\"TLS\" \
     \n\t       URIEncoding=\"UTF-8\" \
@@ -138,7 +138,7 @@ def configure_server_xml(keystore_path: str, keystore_pass: str, server_name: st
 
     # Update defaultHost in Engine
     match_term = r'<Engine name="Catalina" defaultHost="localhost">'
-    replace_term = f'<Engine name="Catalina" defaultHost="{server_name}" jvmRoute="{os.environ["INSTANCE_NAME"]}">'
+    replace_term = f'<Engine name="Catalina" defaultHost="{fqdn}" jvmRoute="{os.environ["INSTANCE_NAME"]}">'
 
     # Preview the match
     #match = re.search(match_term, server_xml)
@@ -149,7 +149,7 @@ def configure_server_xml(keystore_path: str, keystore_pass: str, server_name: st
 
     # Update Host to hostname
     match_term = r'<Host name="localhost"  appBase="webapps"'
-    replace_term = f'<Host name="{server_name}"  appBase="webapps"'
+    replace_term = f'<Host name="{fqdn}"  appBase="webapps"'
 
     # Preview the match
     #match = re.search(match_term, server_xml)
@@ -175,8 +175,8 @@ def configure_server_xml(keystore_path: str, keystore_pass: str, server_name: st
     print("Server.xml configured.")
 
 
-def configure_logging_properties(server_name: str):
-    logging_properties_path = os.environ['CATALINA_BASE'] + r'/conf/logging.properties'
+def configure_logging_properties():
+    logging_properties_path = os.path.join(os.environ['CATALINA_BASE'], 'conf', 'logging.properties')
     instance_name = os.environ['INSTANCE_NAME']
 
     with open(logging_properties_path, 'r') as f:
@@ -231,10 +231,10 @@ def configure_logging_properties(server_name: str):
     print("Logging.properties configured.")
 
 
-def configure_tomcat_manager(org: str, runtime_env: str, server_name: str):
+def configure_tomcat_manager(org: str, runtime_env: str, fqdn: str):
     # Set up Tomcat Manager application
-    mgr_xml_dir = os.environ['CATALINA_BASE'] + f'/conf/Catalina/{server_name}'
-    mgr_xml_path = os.environ['CATALINA_BASE'] + f'/conf/Catalina/{server_name}/manager.xml'
+    mgr_xml_dir = os.path.join(os.environ['CATALINA_BASE'], 'conf', 'Catalina', fqdn)
+    mgr_xml_path = os.path.join(os.environ['CATALINA_BASE'], 'conf', 'Catalina', fqdn, 'manager.xml')
 
     mgr_xml_content = r"""<?xml version="1.0" encoding="UTF-8" ?>
 <Context privileged="true" antiResourceLocking="false"
@@ -254,14 +254,14 @@ def configure_tomcat_manager(org: str, runtime_env: str, server_name: str):
         f.write(mgr_xml_content)
 
     # Brand Tomcat Manager 
-    manager_web_xml_path = os.environ['CATALINA_HOME'] + r'/webapps/manager/WEB-INF/web.xml'
+    manager_web_xml_path = os.path.join(os.environ['CATALINA_HOME'], 'webapps', 'manager', 'WEB-INF', 'web.xml')
 
     with open(manager_web_xml_path, 'r') as f:
         manager_web_xml = f.read()
 
     # Modify Sub-Title
     match_term = r'(<param-value>)Sub-Title(</param-value>)'
-    replace_term = r'\1' + f'<br><i style="color:GoldenRod">{org} {runtime_env} - Apache TomcatManager</i></br>' + r'\2'
+    replace_term = r'\1' + f'<br><i style="color:GoldenRod">{org} {runtime_env} - Apache Tomcat Manager</i></br>' + r'\2'
 
     # Preview the match
     #match = re.search(match_term, manager_web_xml)
@@ -400,7 +400,7 @@ def gen_random_password(length: int = 16) -> str:
 
 
 def parse_config():
-    conf_file = os.environ['SECRETS_HOME'] + r'/tomcat.config'
+    conf_file = os.path.joing(os.environ['SECRETS_HOME'], '/tomcat.config')
     parser = configparser.ConfigParser()
     parser.read(conf_file)
 
