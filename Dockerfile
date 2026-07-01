@@ -8,7 +8,7 @@ ENV CATALINA_BASE="/opt/tomcat/instances/${INSTANCE_NAME}"
 ENV CATALINA_HOME=/usr/local/tomcat
 ENV PATH=$CATALINA_HOME/bin:$PATH
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm
-ENV WORKDIR=${CATALINA_BASE}
+ENV WORKDIR=/opt/tomcat
 ENV TOMCAT_NATIVE_LIBDIR=$CATALINA_HOME/native-jni-lib
 ENV LD_LIBRARY_PATH=/usr/lib:/usr/local/lib:${TOMCAT_NATIVE_LIBDIR}
 ENV MGR_PASS_FILE=
@@ -31,17 +31,18 @@ RUN apk add --no-cache \
    py3-rich \
    py3-requests \
    pwgen \
-   jsvc  
+   jsvc \
+   curl
 
-ENV TOMCAT_VERSION="9.0.118" \
-    TOMCAT_NATIVE_VERSION="2.0.14" 
+ENV TOMCAT_VERSION="9.0.119" \
+    TOMCAT_NATIVE_VERSION="2.0.15" 
 	#COMMONS_DAEMON_VERSION="1.5.1"
 
 RUN set -xe \
 	&& TOMCAT_DOWNLOAD_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
-	&& TOMCAT_DOWNLOAD_SHA512="737367433486757ccd687329d99b1188506cdec57a53a29b415173909c38cdf9da4fc9fd73b8cd17cd0a8def8610ad43bab8e84393dc904a0bd1121da8cab2fc" \
+	&& TOMCAT_DOWNLOAD_SHA512="5215f1c672a9869f8405e440afcc84cc8a2f1e2dce795f5afbaa534d1bc9f2ca20f083661b1d893b9ef26b9b57aa048215c58b861d808130362ba1422a23649a" \
 	&& TOMCAT_NATIVE_DOWNLOAD_URL="https://archive.apache.org/dist/tomcat/tomcat-connectors/native/${TOMCAT_NATIVE_VERSION}/source/tomcat-native-${TOMCAT_NATIVE_VERSION}-src.tar.gz" \
-	&& TOMCAT_NATIVE_DOWNLOAD_SHA512="33d626fab35cbfa7398ca90cabd99950c6362ab4e19637012850fd84ecc78184e4c6c975ece92dc8d6461b6a8c2f83221cbc7374ff154422e7722606a4a144c7" \
+	&& TOMCAT_NATIVE_DOWNLOAD_SHA512="a0b53890c36c3409e764895cfc521cdbbc49af4d03968f5d3ed72ba686524a05bd15c3f7ab8259fbab091547ecbc2fb7aae8f47d8bc38027db0f6a5dbda65004" \
 	&& COMMONS_DAEMON_DOWNLOAD_URL="https://github.com/apache/commons-daemon/archive/refs/tags/commons-daemon-${COMMONS_DAEMON_VERSION}.tar.gz" \
 	&& apk add --no-cache --virtual .fetch-deps \
 		curl \

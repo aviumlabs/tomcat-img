@@ -37,7 +37,7 @@ section.
 
 **Regular build**
 ```shell
-export TC_VERSION=9.0.118
+export TC_VERSION=9.0.119
 ```
 
 ```shell
@@ -68,6 +68,20 @@ docker push aviumlabs/tomcat:$TC_VERSION-alpine
 ```shell
 docker exec -it ap1 /bin/ash
 ```
+
+## Tomcat Testing
+
+Test the pre-configured rpa user:
+
+```shell
+curl -k -u <username:password> https://{tomcat_url}/manager/text/list
+```
+
+Without any changes to the image the initial tomcat_url is 
+`https://ap1.aviumlabs.test`. 
+
+The configured rpa account is: `rpatomcat`
+The generated password for the account is in the `/opt/secrets/rpauser.pass` file.
 
 
 ## Issues

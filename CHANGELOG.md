@@ -2,6 +2,8 @@
 
 **2026-06-24**
 Update base image to Alpine Linux 3.24
+Update to Apache Tomcat v9.0.119
+Update to Apache Tomcat Native v2.0.15 
 
 **2026-05-23**
 Add branch for Apache Tomcat v9.0.118
