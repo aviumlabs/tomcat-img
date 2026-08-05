@@ -74,11 +74,8 @@ docker exec -it ap1 /bin/ash
 Test the pre-configured rpa user:
 
 ```shell
-curl -k -u <username:password> https://{tomcat_url}/manager/text/list
+curl -k -u <username:password> https://localhost:8443/manager/text/list
 ```
-
-Without any changes to the image the initial tomcat_url is 
-`https://ap1.aviumlabs.test`. 
 
 The configured rpa account is: `rpatomcat`
 The generated password for the account is in the `/opt/secrets/rpauser.pass` file.
