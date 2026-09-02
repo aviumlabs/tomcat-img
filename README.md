@@ -37,7 +37,7 @@ section.
 
 **Regular build**
 ```shell
-export TC_VERSION=9.0.119
+export TC_VERSION=9.0.121
 ```
 
 ```shell
@@ -71,14 +71,19 @@ docker exec -it ap1 /bin/ash
 
 ## Tomcat Testing
 
-Test the pre-configured rpa user:
+Test the pre-configured rpa user.
+- The configured rpa account is: `rpatomcat`
+- The generated password for the account is in the `/opt/secrets/rpauser.pass` file.
 
 ```shell
 curl -k -u <username:password> https://localhost:8443/manager/text/list
 ```
 
-The configured rpa account is: `rpatomcat`
-The generated password for the account is in the `/opt/secrets/rpauser.pass` file.
+>  
+> OK - Listed applications for virtual host [ap1.aviumlabs.test]  
+> /manager:running:0:/usr/local/tomcat/webapps/manager  
+>  
+
 
 
 ## Issues

@@ -26,8 +26,8 @@ import sys
 def main():
     tomcat_config, keystore_config = parse_config()
 
-    #print ("Tomcat Configuration:" + str(tomcat_config))
-    #print ("Keystore Configuration:" + str(keystore_config))
+    # print ("Tomcat configuration...\n" + str(tomcat_config))
+    # print ("Keystore configuration..." + str(keystore_config))
 
     if tomcat_config['configured'].lower() != 'true':
         configure_tomcat(tomcat_config, keystore_config)
@@ -400,25 +400,38 @@ def gen_random_password(length: int = 16) -> str:
 
 
 def parse_config():
-    conf_file = os.path.joing(os.environ['SECRETS_HOME'], '/tomcat.config')
-    parser = configparser.ConfigParser()
-    parser.read(conf_file)
+    print("Parsing configuration...")
+    # print("Environment variables...\n" + str(os.environ))
+    if 'SECRETS_HOME' not in os.environ:
+        # print("SECRETS_HOME environment variable is not set.")
+        os.environ['SECRETS_HOME'] = os.path.join(os.sep, r'opt', r'secrets')
+    else:
+        print("Found correct environment variable.\n")
 
-    tomcat_config = {}
+    conf_file = os.path.join(os.environ['SECRETS_HOME'], 'tomcat.config')
+    if not os.path.isfile(conf_file):
+        print(f"Configuration file {conf_file} not found.")
+        sys.exit(1)
+    else:
+        # print(f"Reading configuration from {conf_file}.")
+        parser = configparser.ConfigParser()
+        parser.read(conf_file)
 
-    if 'tomcat' in parser:
-        tomcat_config = dict(parser['tomcat'])
+        tomcat_config = {}
 
-    keystore_config = {}
+        if 'tomcat' in parser:
+            tomcat_config = dict(parser['tomcat'])
 
-    if 'keystore' in parser:
-        keystore_config = dict(parser['keystore'])
+        keystore_config = {}
 
-    return tomcat_config, keystore_config
+        if 'keystore' in parser:
+            keystore_config = dict(parser['keystore'])
+
+        return tomcat_config, keystore_config
 
 
 def save_config(tomcat_config: dict, keystore_config: dict):
-    conf_file = os.environ['SECRETS_HOME'] + r'/tomcat.config'
+    conf_file = os.path.join(os.environ['SECRETS_HOME'], 'tomcat.config')
 
     parser = configparser.ConfigParser()
     parser['tomcat'] = tomcat_config
