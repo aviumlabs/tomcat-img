@@ -1,5 +1,8 @@
 # CHANGELOG
 
+**2026-09-02**
+Update to Apache Tomcat v9.0.121
+
 **2026-06-24**
 Update base image to Alpine Linux 3.24
 Update to Apache Tomcat v9.0.119
