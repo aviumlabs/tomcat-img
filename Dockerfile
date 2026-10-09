@@ -33,15 +33,15 @@ RUN apk add --no-cache \
    jsvc \
    curl
 
-ENV TOMCAT_VERSION="9.0.121" \
-    TOMCAT_NATIVE_VERSION="2.0.15" 
+ENV TOMCAT_VERSION="9.0.122" \
+    TOMCAT_NATIVE_VERSION="2.0.16" 
 	#COMMONS_DAEMON_VERSION="1.5.1"
 
 RUN set -xe \
 	&& TOMCAT_DOWNLOAD_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
-	&& TOMCAT_DOWNLOAD_SHA512="16494dd4745f808d3c506807b5275521fd71044d976f441d18eeeab0f5a38bc1b5344ca395292f6f26eb7612cd8c8e746d01ccdfb29893d394052d9f4b1f4c11" \
+	&& TOMCAT_DOWNLOAD_SHA512="1f2f7d822a407999d954e7eb4fb1e78998c2a9372bb466d27e8cefd2521ef779183744f39dfa50a77ce3b798e7fe30bf2fd43fd1d6a2e6135617af1ddda6ba2a" \
 	&& TOMCAT_NATIVE_DOWNLOAD_URL="https://archive.apache.org/dist/tomcat/tomcat-connectors/native/${TOMCAT_NATIVE_VERSION}/source/tomcat-native-${TOMCAT_NATIVE_VERSION}-src.tar.gz" \
-	&& TOMCAT_NATIVE_DOWNLOAD_SHA512="a0b53890c36c3409e764895cfc521cdbbc49af4d03968f5d3ed72ba686524a05bd15c3f7ab8259fbab091547ecbc2fb7aae8f47d8bc38027db0f6a5dbda65004" \
+	&& TOMCAT_NATIVE_DOWNLOAD_SHA512="a38713bfd18a0e6cab9cfb8cacb694fecb6790c13ff495a56ca804f8c9fe2e521356e4eeeef1e2c9967a5f36618779dc321adf65a069676290cf493d6222fbb9" \
 	&& COMMONS_DAEMON_DOWNLOAD_URL="https://github.com/apache/commons-daemon/archive/refs/tags/commons-daemon-${COMMONS_DAEMON_VERSION}.tar.gz" \
 	&& apk add --no-cache --virtual .fetch-deps \
 		curl \
@@ -136,8 +136,8 @@ RUN set -xe \
     && cp "$CATALINA_HOME/conf/logging.properties" "$CATALINA_BASE/conf/" \
 	&& chown -R tomcat:tomcat $CATALINA_BASE
 
-COPY tomcat.config "$SECRETS_HOME/"
-RUN chown tomcat:tomcat "$SECRETS_HOME/tomcat.config"
+COPY tomcat.conf "$WORKDIR/.tomcat.conf"
+RUN chown tomcat:tomcat "$WORKDIR/.tomcat.conf"
 
 COPY entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh

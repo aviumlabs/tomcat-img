@@ -1,5 +1,11 @@
 # CHANGELOG
 
+**2026-10-09**
+Update to Apache Tomcat v9.0.122
+Update to Apache Tomcat Native v2.0.16
+Rename tomcat.config to tomcat.conf
+Add pre-configuration copy of tomcat.conf to image.
+
 **2026-09-02**
 Update to Apache Tomcat v9.0.121
 

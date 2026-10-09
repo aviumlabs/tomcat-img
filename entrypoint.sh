@@ -402,13 +402,21 @@ def gen_random_password(length: int = 16) -> str:
 def parse_config():
     print("Parsing configuration...")
     # print("Environment variables...\n" + str(os.environ))
+    if 'WORKDIR' not in os.environ:
+        # print("WORKDIR environment variable is not set.")
+        os.environ['WORKDIR'] = os.path.join(os.sep, r'opt', r'tomcat')
+
     if 'SECRETS_HOME' not in os.environ:
         # print("SECRETS_HOME environment variable is not set.")
         os.environ['SECRETS_HOME'] = os.path.join(os.sep, r'opt', r'secrets')
-    else:
-        print("Found correct environment variable.\n")
 
-    conf_file = os.path.join(os.environ['SECRETS_HOME'], 'tomcat.config')
+    # Use this configuration file after initial pre-configuration in WORKDIR
+    conf_file = os.path.join(os.environ['SECRETS_HOME'], 'tomcat.conf')
+
+    if not os.path.isfile(conf_file):
+        # initial pre-configuration read-only version in WORKDIR
+        conf_file = os.path.join(os.environ['WORKDIR'], '.tomcat.conf')
+
     if not os.path.isfile(conf_file):
         print(f"Configuration file {conf_file} not found.")
         sys.exit(1)
@@ -431,7 +439,7 @@ def parse_config():
 
 
 def save_config(tomcat_config: dict, keystore_config: dict):
-    conf_file = os.path.join(os.environ['SECRETS_HOME'], 'tomcat.config')
+    conf_file = os.path.join(os.environ['SECRETS_HOME'], 'tomcat.conf')
 
     parser = configparser.ConfigParser()
     parser['tomcat'] = tomcat_config
