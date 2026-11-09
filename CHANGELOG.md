@@ -1,5 +1,8 @@
 # CHANGELOG
 
+**2026-11-08**
+Update to Apache Tomcat v9.0.123
+
 **2026-10-09**
 Update to Apache Tomcat v9.0.122
 Update to Apache Tomcat Native v2.0.16

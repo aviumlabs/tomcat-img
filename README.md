@@ -37,7 +37,7 @@ section.
 
 **Regular build**
 ```shell
-export TC_VERSION=9.0.122
+export TC_VERSION=9.0.123
 ```
 
 ```shell
