@@ -19,8 +19,8 @@ ENV TC_SECURE_PORT=8443
 RUN mkdir -p "${CATALINA_HOME}"
 
 RUN set -eux; \
-   addgroup -g 935 -S tomcat; \
-   adduser -u 935 -S -D -G tomcat -H -h /opt/tomcat -s /bin/ash tomcat; \
+   addgroup -g 965 -S tomcat; \
+   adduser -u 965 -S -D -G tomcat -H -h /opt/tomcat -s /bin/ash tomcat; \
    install --verbose --directory --owner tomcat --group tomcat --mode 1755 /opt/tomcat
    
 RUN apk add --no-cache \
@@ -138,6 +138,7 @@ RUN set -xe \
 
 COPY tomcat.conf "$WORKDIR/.tomcat.conf"
 RUN chown tomcat:tomcat "$WORKDIR/.tomcat.conf"
+RUN chmod 600 "$WORKDIR/.tomcat.conf"
 
 COPY entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
