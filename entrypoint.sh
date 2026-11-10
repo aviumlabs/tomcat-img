@@ -326,6 +326,7 @@ def configure_tomcat_manager_users(tomcat_config: dict):
         managerpass = gen_random_password()
         with open(mgr_pass_path, 'w') as f:
             f.write(managerpass)
+        os.chmod(mgr_pass_path, 0o600)
 
     if os.path.isfile(rpa_pass_path):
         with open(rpa_pass_path, 'r') as f:
@@ -334,6 +335,7 @@ def configure_tomcat_manager_users(tomcat_config: dict):
         rpapass = gen_random_password()
         with open(rpa_pass_path, 'w') as f:
             f.write(rpapass)
+        os.chmod(rpa_pass_path, 0o600)
 
     if os.path.isfile(jmx_pass_path):
         with open(jmx_pass_path, 'r') as f:
@@ -342,6 +344,7 @@ def configure_tomcat_manager_users(tomcat_config: dict):
         jmxpass = gen_random_password()
         with open(jmx_pass_path, 'w') as f:
             f.write(jmxpass)
+        os.chmod(jmx_pass_path, 0o600)
 
     with open(tomcat_users_xml_path, 'r') as f:
         tomcat_users_xml = f.read()
